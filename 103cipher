@@ -1,0 +1,123 @@
+#!/usr/bin/env python3
+
+import sys
+import math
+
+#key for encription
+
+def len_key():
+    l_k = len(sys.argv[2])
+    sqr_k = math.sqrt(l_k)
+    s = int(sqr_k)
+    if s != sqr_k:
+        s = s + 1
+    return (s)
+
+def m_key():
+    len_k = (len_key())
+    l_k = len(sys.argv[2])
+    m_k = []
+    i = 0
+    for a in range (len_k):
+        temp = []
+        for b in range (len_k):
+            if i < l_k:
+                temp.append(ord(sys.argv[2][i]))
+            if i >= l_k:
+                temp.append(0)
+            i = i + 1
+        m_k.append(temp)
+    return (m_k)
+
+def print_key(m_k):
+    len_k = (len_key())
+    for a in range(len_k):
+        for b in range(len_k):
+            if (b + 1) != len_k:
+                print((m_k[a][b]), end='\t')
+            else:
+                print(m_k[a][b])
+
+#message matrix
+
+def m_mssg():
+    len_k = (len_key())
+    rows = int(len(sys.argv[1])/len_k) + 1
+    l_m = len(sys.argv[1])
+    m_m = []
+    i = 0
+    for a in range (rows):
+        temp = []
+        for b in range (len_k):
+            if i < l_m:
+                temp.append(ord(sys.argv[1][i]))
+            if i >= l_m:
+                temp.append(0)
+            i = i + 1
+        m_m.append(temp)
+    return (m_m)
+
+#encription
+
+def encrypted(m_k, m_m):
+    len_k = (len_key())
+    rows = int(len(sys.argv[1])/len_k) + 1
+    i = 0
+    str_en = ""
+    m_en = []
+    for a in range (rows):
+        temp = []
+        for b in range (len_k):
+                temp.append(0)
+        m_en.append(temp)
+
+    for c in range (rows):
+        for d in range (len_k):
+            for e in range (len_k):
+                m_en[c][d] += m_m[c][e] * m_k[e][d]
+            if i == 0:
+                str_en = str_en + str(m_en[c][d])
+                i = i + 1
+            else:
+                str_en = str_en + " "
+                str_en = str_en + str(m_en[c][d])
+    print_all_en(str_en)
+
+def print_all_en(str_en):
+    print("Key matrix:")
+    print_key(m_key())
+    print("\nEncrypted message:")
+    print(str_en)
+
+
+
+
+def print_help():
+    print("""USAGE
+    ./103cipher message key flag
+
+DESCRIPTION
+    message a message, made of ASCII characters
+    key the encryption key, made of ASCII characters
+    flag 0 for the message to be encrypted, 1 to be decrypted""")
+
+def main():
+    if len(sys.argv) > 1 and sys.argv[1] == '-h':
+        print_help()
+        return
+    if len(sys.argv) != 4:
+        print("ERROR: Invalid number of arguments.", file=sys.stderr)
+        exit(84)
+    try:
+        flag = int(sys.argv[3])
+    except ValueError:
+        print("ERROR: Flag must be an integer.", file=sys.stderr)
+        exit(84)
+    if flag != 0 and flag != 1:
+        print("ERROR: Flag must be 0 or 1.", file=sys.stderr)
+        exit(84)
+    if flag == 0:
+        encrypted(m_key(), m_mssg())
+
+if __name__ == "__main__":
+    main()
