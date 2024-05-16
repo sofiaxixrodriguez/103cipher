@@ -1,3 +1,3 @@
-# 103cipher\n
+# 103cipher
 80% passed\n
 encryption done
